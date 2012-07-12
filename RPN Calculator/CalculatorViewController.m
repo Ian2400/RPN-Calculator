@@ -15,6 +15,7 @@
 @property (nonatomic,strong) CalculatorBrain *brain;
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
 @property (nonatomic, strong) NSMutableDictionary *currentVariableValues;
+@property (nonatomic, strong) NSMutableSet *currentVariables;
 @end
 
 @implementation CalculatorViewController
@@ -23,7 +24,7 @@
 @synthesize currentVariableValues = _currentVariableValues;
 @synthesize variableDescription = _variableDescription;
 @synthesize userIsInTheMiddleOfEnteringANumber = _userIsInTheMiddleOfEnteringANumber;
-
+@synthesize currentVariables = _currentVariables;
 @synthesize brain = _brain;
 	
 -(CalculatorBrain *) brain
@@ -56,7 +57,8 @@
     } else 
     {
         [self.brain clearLastProgramItem];
-        self.calcHistory.text = [self.brain programDescriptionForDisplay:[self.brain program]];
+        NSMutableArray *thisProgram = [[self.brain program] mutableCopy];
+        self.calcHistory.text = [CalculatorBrain descriptionOfProgram:thisProgram usingVars:self.currentVariables];
         double result = [CalculatorBrain runProgram:[self.brain program] usingVariableValues:[self.currentVariableValues copy]];
         NSString *displayThis = [NSString stringWithFormat:@"%g",result];
         self.display.text = displayThis;
@@ -85,42 +87,58 @@
 {
     //stop entering a number and push it to the stack if in the middle of entering one
     if(self.userIsInTheMiddleOfEnteringANumber) [self enterPressed];
-    //
-
+    
+    //push what was pressed
     [self.brain pushOperand:sender.currentTitle];
-    self.calcHistory.text = [self.brain programDescriptionForDisplay:[self.brain program]];
+    
+    NSString *descriptionOfProgram = @"";
+    if ([[[self.brain program] objectAtIndex:0] isKindOfClass:[NSString class]])
+    {
+        //if the first thing on the stack is a two operand operation, clear the stack
+        if ([CalculatorBrain isTwoOperandOperation:[[self.brain program] objectAtIndex:0]]==YES)
+        {
+            [self.brain clearStack];
+        }
+        else {
+        NSMutableArray *thisProgram = [[self.brain program] mutableCopy];
+        descriptionOfProgram = [CalculatorBrain descriptionOfProgram:thisProgram usingVars:self.currentVariables];
+        self.calcHistory.text = descriptionOfProgram;
+        }
+    }
     double result = [CalculatorBrain runProgram:[self.brain program] usingVariableValues:[self.currentVariableValues copy]];
     NSString *resultString = [NSString stringWithFormat:@"%g", result];
     self.display.text = resultString;
-
-
 }
 
 - (IBAction)setVarsPressed:(UIButton *)defTitle {
     //clear the dictionary and the variable set in the brain instance
     [self.currentVariableValues removeAllObjects];
-    [self.brain clearVariablesUsedInProgram];
+    [self.currentVariables removeAllObjects];
     
     //define the set of variables in the brain instance and set up the dictionary
     if([defTitle.currentTitle isEqualToString: @"x1 y2 a3"]==YES) {
         [self.currentVariableValues setObject:[NSNumber numberWithInt:1] forKey:@"x"];
         [self.currentVariableValues setObject:[NSNumber numberWithInt:2] forKey:@"y"];
         [self.currentVariableValues setObject:[NSNumber numberWithInt:3] forKey:@"a"];
-        [self.brain addVariableUsedInProgram:@"x",@"y",@"a"];
-
+        [self.currentVariables addObject:@"x"];
+        [self.currentVariables addObject:@"y"];
+        [self.currentVariables addObject:@"a"];
     } else if([defTitle.currentTitle isEqualToString: @"all 4"]==YES) {
         [self.currentVariableValues setObject:[NSNumber numberWithInt:4] forKey:@"x"];
         [self.currentVariableValues setObject:[NSNumber numberWithInt:4] forKey:@"y"];
         [self.currentVariableValues setObject:[NSNumber numberWithInt:4] forKey:@"a"];
-        [self.currentVariableValues setObject:[NSNumber numberWithInt:4] forKey:@"a"];
-        [self.brain addVariableUsedInProgram:@"x",@"y",@"a", @"b"];
+        [self.currentVariableValues setObject:[NSNumber numberWithInt:4] forKey:@"b"];
+        [self.currentVariables addObject:@"x"];
+        [self.currentVariables addObject:@"y"];
+        [self.currentVariables addObject:@"a"];
+        [self.currentVariables addObject:@"b"];
     } else if([defTitle.currentTitle isEqualToString: @"y5"]==YES) {
-        [self.currentVariableValues setObject:[NSNumber numberWithInt:5] forKey:@"a"];
-        [self.brain addVariableUsedInProgram:@"y"];
+        [self.currentVariableValues setObject:[NSNumber numberWithInt:5] forKey:@"y"];
+        [self.currentVariables addObject:@"y"];
     }
  
     //display a description of the new variable assignments on the view
-     NSString *description = @"";
+     NSString *description = @"SOMETHING DIDN'T WORK";
      NSNumber *varVal = 0;
      
      for (NSString* key in self.currentVariableValues) {

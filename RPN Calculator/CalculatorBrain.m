@@ -68,26 +68,6 @@
     return [self.programStack copy];
 }
 
-//returns a description of the current program
-- (NSString *)programDescriptionForDisplay:(id)program
-{
-    NSString *description;
-    NSMutableArray *stack;
-    if ([program isKindOfClass:[NSArray class]]) {
-        stack = [program mutableCopy];
-    }
-    
-    if ([[stack objectAtIndex:0] isKindOfClass:[NSString class]])
-    {
-        if ([CalculatorBrain isTwoOperandOperation:[stack objectAtIndex:0]]==YES)
-        {
-            [self clearStack];
-            description = @"";
-        }
-    } else description = [CalculatorBrain descriptionOfProgram:stack usingVars:self.variablesUsedInProgram];        
-    return description;
-}
-
 //I wanted to call this method from the controller, but coded it wrong and didn't take the time to fix it
 + (NSString *)descriptionOfProgram:(NSMutableArray *)stack usingVars:(NSMutableSet *)varSet
 {
@@ -231,7 +211,7 @@
             for (NSString* key in Dict) {
             if ([key isEqualToString:operation] == YES) {
                 result = [[Dict objectForKey:key] doubleValue];
-            }
+            } 
             }
         }
     }

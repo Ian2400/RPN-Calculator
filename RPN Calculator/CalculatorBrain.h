@@ -14,7 +14,6 @@
 - (void)pushOperand:(id)operand;
 - (void)clearStack;
 
-- (NSString *)programDescriptionForDisplay:(id)program;
 + (NSString *)descriptionOfProgram:(NSMutableArray *)stack usingVars:(NSMutableSet *)varSet;
 +(double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues;
 +(BOOL)isTwoOperandOperation:(NSString *)operation;
