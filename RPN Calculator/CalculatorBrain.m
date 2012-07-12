@@ -88,6 +88,7 @@
     return description;
 }
 
+//I wanted to call this method from the controller, but coded it wrong and didn't take the time to fix it
 + (NSString *)descriptionOfProgram:(NSMutableArray *)stack usingVars:(NSMutableSet *)varSet
 {
     NSString *descriptionForCalculatorDisplay = @"";
