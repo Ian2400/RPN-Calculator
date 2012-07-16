@@ -114,7 +114,7 @@
                 descriptionForCalculatorDisplay = [NSString stringWithFormat:@"%@%@%@%@",descriptionForCalculatorDisplay,@" ",[currentObjInStack stringValue],@")"];
             }
             if(i<[programStackInLogicalOrder count]-1){
-            if([[programStackInLogicalOrder objectAtIndex:(i+1)] isKindOfClass:[NSNumber class]])
+            if([[programStackInLogicalOrder objectAtIndex:(i+1)] isKindOfClass:[NSNumber class]] || [CalculatorBrain isVariableUsedInProgram:[programStackInLogicalOrder objectAtIndex:(i+1)] inSet:varSet]==YES)
             {
                 descriptionForCalculatorDisplay = [descriptionForCalculatorDisplay stringByAppendingString:@", "];
                 [listOfPrograms addObject:descriptionForCalculatorDisplay];
@@ -148,15 +148,23 @@
                 }
             } else if([CalculatorBrain isVariableUsedInProgram:currentObjInStack inSet:varSet]==YES)
             {
-                if (i==0)
-                { 
-                    descriptionForCalculatorDisplay = [descriptionForCalculatorDisplay stringByAppendingString:currentObjInStack];                    
-                } else if (i==([programStackInLogicalOrder count]-1))
+                if (descriptionForCalculatorDisplay == @"")
                 {
-                    //Do nothing because user just entered a variable at end of stack
-                } else 
+                    descriptionForCalculatorDisplay = [NSString stringWithFormat:@"%@%@",descriptionForCalculatorDisplay,currentObjInStack];
+                } else if(i==([programStackInLogicalOrder count]-1))
                 {
                     descriptionForCalculatorDisplay = [NSString stringWithFormat:@"%@%@%@",descriptionForCalculatorDisplay,@" ",currentObjInStack];
+                } else 
+                {
+                    descriptionForCalculatorDisplay = [NSString stringWithFormat:@"%@%@%@%@",descriptionForCalculatorDisplay,@" ",currentObjInStack,@")"];
+                }
+                if(i<[programStackInLogicalOrder count]-1){
+                    if([[programStackInLogicalOrder objectAtIndex:(i+1)] isKindOfClass:[NSNumber class]] || [CalculatorBrain isVariableUsedInProgram:[programStackInLogicalOrder objectAtIndex:(i+1)] inSet:varSet]==YES)
+                    {
+                        descriptionForCalculatorDisplay = [descriptionForCalculatorDisplay stringByAppendingString:@", "];
+                        [listOfPrograms addObject:descriptionForCalculatorDisplay];
+                        descriptionForCalculatorDisplay = @"";
+                    }
                 }
             }
         }
