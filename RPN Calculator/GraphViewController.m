@@ -7,20 +7,41 @@
 //
 
 #import "GraphViewController.h"
+#import "GraphView.h"
 
-@interface GraphViewController ()
-
+@interface GraphViewController () <graphViewDataSource>
+@property (nonatomic, weak) IBOutlet GraphView *graphView;
 @end
 
 @implementation GraphViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+@synthesize graphView = _graphView;
+@synthesize thisProgram = _thisProgram;
+
+-(void)setProgram:(NSArray *)program
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+    _thisProgram = program;
+    [self.graphView setNeedsDisplay];
+}
+
+//set up a pinch recognizer
+-(void)setGraphView:(GraphView *)graphView
+{
+    _graphView = graphView;
+    [self.graphView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(pinch:)]];
+    [self.graphView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(handleOriginPanGesture:)]];
+    
+    // Create triple tap gesture recognizer
+    UITapGestureRecognizer *oneFingerThreeTaps = [[UITapGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(handleTripleTap:)];
+    
+    // Set required taps and number of touches
+    [oneFingerThreeTaps setNumberOfTapsRequired:3];
+    [oneFingerThreeTaps setNumberOfTouchesRequired:1];
+    
+    // Add the gesture to the view
+    [self.graphView addGestureRecognizer:oneFingerThreeTaps];
+    
+    self.graphView.dataSource = self;
 }
 
 - (void)viewDidLoad
@@ -37,7 +58,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return NO;
 }
 
 @end
