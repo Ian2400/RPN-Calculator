@@ -15,7 +15,7 @@
 @property (nonatomic,strong) CalculatorBrain *brain;
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
 @property (nonatomic, strong) NSMutableDictionary *currentVariableValues;
-@property (nonatomic, strong) NSMutableSet *currentVariables;
+@property (nonatomic, strong) NSMutableSet *possibleVariableNames;
 @end
 
 @implementation CalculatorViewController
@@ -24,7 +24,7 @@
 @synthesize currentVariableValues = _currentVariableValues;
 @synthesize variableDescription = _variableDescription;
 @synthesize userIsInTheMiddleOfEnteringANumber = _userIsInTheMiddleOfEnteringANumber;
-@synthesize currentVariables = _currentVariables;
+@synthesize possibleVariableNames = _possibleVariableNames;
 @synthesize brain = _brain;
 	
 -(CalculatorBrain *) brain
@@ -32,10 +32,10 @@
     if(!_brain) _brain = [[CalculatorBrain alloc] init];
     return _brain;
 }
--(NSMutableSet *) currentVariables
+-(NSMutableSet *) possibleVariableNames
 {
-    if(!_currentVariables) _currentVariables = [[NSMutableSet alloc] initWithObjects:@"x",@"y",@"a",@"b",@"pi", nil];
-    return _currentVariables;
+    if(!_possibleVariableNames) _possibleVariableNames = [[NSMutableSet alloc] initWithObjects:@"x",@"y",@"a",@"b",@"pi", nil];
+    return _possibleVariableNames;
 }
 
 /*-(NSMutableDictionary *) currentVariableValues
@@ -70,7 +70,7 @@
     {
         [self.brain clearLastProgramItem];
         NSMutableArray *thisProgram = [[self.brain program] mutableCopy];
-        self.calcHistory.text = [CalculatorBrain descriptionOfProgram:thisProgram usingVars:self.currentVariables];
+        self.calcHistory.text = [CalculatorBrain descriptionOfProgram:thisProgram usingVars:self.possibleVariableNames];
         double result = [CalculatorBrain runProgram:[self.brain program] usingVariableValues:[self.currentVariableValues copy]];
         NSString *displayThis = [NSString stringWithFormat:@"%g",result];
         self.display.text = displayThis;
@@ -112,7 +112,7 @@
             [self.brain clearStack];
         }
     }
-    if([self.currentVariables containsObject:sender.currentTitle]==YES) {
+    if([self.possibleVariableNames containsObject:sender.currentTitle]==YES) {
         NSNumber *result = [[NSNumber alloc]initWithInt:0];
         if([self.currentVariableValues objectForKey:sender.currentTitle]) {
              result = [self.currentVariableValues objectForKey:sender.currentTitle];
@@ -123,7 +123,7 @@
         self.display.text = resultString;
     } else {
         NSMutableArray *thisProgram = [[self.brain program] mutableCopy];
-        descriptionOfProgram = [CalculatorBrain descriptionOfProgram:thisProgram usingVars:self.currentVariables];
+        descriptionOfProgram = [CalculatorBrain descriptionOfProgram:thisProgram usingVars:self.possibleVariableNames];
         self.calcHistory.text = descriptionOfProgram;
         double result = [CalculatorBrain runProgram:[self.brain program] usingVariableValues:self.currentVariableValues];
         NSString *resultString = [NSString stringWithFormat:@"%g", result];
