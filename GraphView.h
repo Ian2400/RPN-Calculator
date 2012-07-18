@@ -18,7 +18,6 @@
 @interface GraphView : UIView
 @property (nonatomic) CGFloat scale;
 @property (nonatomic) CGPoint axesOrigin;
-//@property (nonatomic) CGFloat sumOfVelocities;
 @property (nonatomic) CGPoint startingOrigin;
 @property (nonatomic, weak) IBOutlet id <graphViewDataSource> dataSource;
 @end

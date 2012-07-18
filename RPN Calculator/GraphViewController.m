@@ -9,6 +9,10 @@
 #import "GraphViewController.h"
 #import "GraphView.h"
 #import "CalculatorBrain.h"
+#define UI_USER_INTERFACE_IDIOM() \
+([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? \
+[[UIDevice currentDevice] userInterfaceIdiom] : \
+UIUserInterfaceIdiomPhone)
 
 @interface GraphViewController () <graphViewDataSource>
 @property (nonatomic, weak) IBOutlet GraphView *graphView;
@@ -77,6 +81,10 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+    if (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad)
+    {
+        return YES;
+    }
     return NO;
 }
 

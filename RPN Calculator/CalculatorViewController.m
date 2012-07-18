@@ -10,6 +10,10 @@
 #import "CalculatorBrain.h"
 #import "GraphViewController.h"
 #import "math.h"	
+#define UI_USER_INTERFACE_IDIOM() \
+([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? \
+[[UIDevice currentDevice] userInterfaceIdiom] : \
+UIUserInterfaceIdiomPhone)
 
 @interface CalculatorViewController ()
 
@@ -187,5 +191,14 @@
 - (void)viewDidUnload {
     [self setVariableDescription:nil];
     [super viewDidUnload];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    if (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad)
+    {
+        return YES;
+    }
+    return NO;
 }
 @end

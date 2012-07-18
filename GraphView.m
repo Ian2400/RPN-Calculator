@@ -15,7 +15,6 @@
 @synthesize dataSource = _dataSource;
 @synthesize axesOrigin = _axesOrigin;
 @synthesize startingOrigin = _startingOrigin;
-@synthesize sumOfVelocities = _sumOfVelocities;
 
 //Defines the default scale as slightly less than 1
 #define DEFAULT_SCALE 10;
@@ -77,7 +76,6 @@
     { 
         [self setScale:(self.scale + gesture.velocity)];
     }
-    //if(gesture.state == UIGestureRecognizerStateEnded)    self.sumOfVelocities = sumOfVelocities;
 }
 
 //changes the graph origin based on a pan
