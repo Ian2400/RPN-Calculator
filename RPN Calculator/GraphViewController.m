@@ -16,8 +16,15 @@
 
 @implementation GraphViewController
 
+@synthesize programDescription = _programDescription;
 @synthesize graphView = _graphView;
 @synthesize thisProgram = _thisProgram;
+
+-(void)setProgramDescription
+{
+    NSString *description = [CalculatorBrain descriptionOfProgram:[[NSMutableArray alloc] initWithArray:self.thisProgram] usingVars:[[NSMutableSet alloc] initWithObjects:@"x",@"y",@"a",@"b",@"pi", nil]];
+    self.programDescription.text = description;
+}
 
 -(double)yValueToDraw:(double)xValue
 {
@@ -34,7 +41,6 @@
 -(void)setProgram:(NSArray *)program
 {
     _thisProgram = program;
-    //[self.graphView setNeedsDisplay];
 }
 
 //set up a pinch recognizer

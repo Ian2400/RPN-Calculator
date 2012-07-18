@@ -15,6 +15,7 @@
 @synthesize dataSource = _dataSource;
 @synthesize axesOrigin = _axesOrigin;
 @synthesize startingOrigin = _startingOrigin;
+@synthesize sumOfVelocities = _sumOfVelocities;
 
 //Defines the default scale as slightly less than 1
 #define DEFAULT_SCALE 10;
@@ -50,6 +51,11 @@
 -(void)setScale:(CGFloat)scale
 {  
     if(scale !=_scale) {
+        if(scale >= 100) {
+        scale = 100;
+        } else if(_scale <=-100) {
+            scale = -100;
+        }
         _scale = scale;
         [self setNeedsDisplay];
     }
@@ -67,12 +73,11 @@
 //changes the scale based on pinching
 -(void)pinch:(UIPinchGestureRecognizer *)gesture
 {
-    if((gesture.state == UIGestureRecognizerStateChanged) ||
-       (gesture.state == UIGestureRecognizerStateEnded))
-    {
-        [self setScale:gesture.scale];
+    if(gesture.state == UIGestureRecognizerStateChanged || gesture.state == UIGestureRecognizerStateEnded)
+    { 
+        [self setScale:(self.scale + gesture.velocity)];
     }
-    if(gesture.state == UIGestureRecognizerStateEnded)    gesture.scale = 1;
+    //if(gesture.state == UIGestureRecognizerStateEnded)    self.sumOfVelocities = sumOfVelocities;
 }
 
 //changes the graph origin based on a pan
@@ -134,7 +139,6 @@
     double graphXValue = 0.0;
     double graphYValue = 0.0;
     float viewYValue = 0.0;
-    //CGRect pixelToDraw;
     
     for (float viewXValue = 0.0; viewXValue <= self.bounds.size.width; viewXValue = viewXValue + 1.0 / self.contentScaleFactor) {
         //set up the path start
@@ -142,15 +146,15 @@
         CGContextMoveToPoint(context, viewXValue, viewYValue);
         
         //get the next point on the graph
-        graphXValue = (viewXValue - self.axesOrigin.x);
+        graphXValue = (viewXValue - self.axesOrigin.x)/pointsPerUnit;
         graphYValue = [self.dataSource yValueToDraw:graphXValue];
-        viewYValue = (self.axesOrigin.y - graphYValue);
-        
+        viewYValue = (self.axesOrigin.y - (graphYValue*pointsPerUnit));
+
         //set up the path draw
         CGContextAddLineToPoint(context, viewXValue, viewYValue);
         CGContextStrokePath(context);
     }
-    
+    [self.dataSource setProgramDescription];
 }
 
 
