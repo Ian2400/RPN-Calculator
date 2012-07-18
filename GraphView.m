@@ -17,7 +17,7 @@
 @synthesize startingOrigin = _startingOrigin;
 
 //Defines the default scale as slightly less than 1
-#define DEFAULT_SCALE 1;
+#define DEFAULT_SCALE 10;
 
 -(CGFloat) scale
 {
@@ -119,17 +119,38 @@
 - (void)drawRect:(CGRect)rect
 {
 
-    //CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    //Draw the axes
     
     CGRect bounds = self.bounds;
     
-    CGFloat pointsPerUnit = self.scale * 1;
+    CGFloat pointsPerUnit = self.scale / self.contentScaleFactor;
     
     [AxesDrawer drawAxesInRect:bounds originAtPoint:self.axesOrigin scale:pointsPerUnit];
     
-    
-    //draw axes
     //draw line
+    
+    double graphXValue = 0.0;
+    double graphYValue = 0.0;
+    float viewYValue = 0.0;
+    //CGRect pixelToDraw;
+    
+    for (float viewXValue = 0.0; viewXValue <= self.bounds.size.width; viewXValue = viewXValue + 1.0 / self.contentScaleFactor) {
+        //set up the path start
+        CGContextBeginPath(context);
+        CGContextMoveToPoint(context, viewXValue, viewYValue);
+        
+        //get the next point on the graph
+        graphXValue = (viewXValue - self.axesOrigin.x);
+        graphYValue = [self.dataSource yValueToDraw:graphXValue];
+        viewYValue = (self.axesOrigin.y - graphYValue);
+        
+        //set up the path draw
+        CGContextAddLineToPoint(context, viewXValue, viewYValue);
+        CGContextStrokePath(context);
+    }
+    
 }
 
 

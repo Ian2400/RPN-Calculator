@@ -8,6 +8,7 @@
 
 #import "GraphViewController.h"
 #import "GraphView.h"
+#import "CalculatorBrain.h"
 
 @interface GraphViewController () <graphViewDataSource>
 @property (nonatomic, weak) IBOutlet GraphView *graphView;
@@ -18,10 +19,22 @@
 @synthesize graphView = _graphView;
 @synthesize thisProgram = _thisProgram;
 
+-(double)yValueToDraw:(double)xValue
+{
+    double result = 5.0;
+    
+    if(xValue) {
+        NSDictionary *xValueDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:xValue],@"x", nil]; 
+        result = [CalculatorBrain runProgram:self.thisProgram usingVariableValues:xValueDict];
+    }
+    
+    return result;
+}
+
 -(void)setProgram:(NSArray *)program
 {
     _thisProgram = program;
-    [self.graphView setNeedsDisplay];
+    //[self.graphView setNeedsDisplay];
 }
 
 //set up a pinch recognizer

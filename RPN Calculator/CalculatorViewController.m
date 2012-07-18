@@ -8,6 +8,7 @@
 
 #import "CalculatorViewController.h"
 #import "CalculatorBrain.h"
+#import "GraphViewController.h"
 #import "math.h"	
 
 @interface CalculatorViewController ()
@@ -38,11 +39,13 @@
     return _possibleVariableNames;
 }
 
-/*-(NSMutableDictionary *) currentVariableValues
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if(!_currentVariableValues) _currentVariableValues = [[NSMutableDictionary alloc] initWithObjectsAndKeys:0,@"foo", nil];
-    return _currentVariableValues;
-}*/
+    if([segue.identifier isEqualToString:@"ShowGraph"])
+    {
+        [segue.destinationViewController setProgram:self.brain.program];
+    }
+}
 
 - (IBAction)pointPressed:(UIButton *)sender 
 {

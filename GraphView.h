@@ -11,14 +11,14 @@
 @class GraphView;
 
 @protocol graphViewDataSource
-//- (float) programForGraphView:(GraphView *)sender;
+- (double) yValueToDraw:(double)xValue;
 @end
 
 @interface GraphView : UIView
 @property (nonatomic) CGFloat scale;
 @property (nonatomic) CGPoint axesOrigin;
 @property (nonatomic) CGPoint startingOrigin;
--(void)pinch:(UIPinchGestureRecognizer *)gesture;
--(void)handleOriginPanGesture:(UIPanGestureRecognizer *)gesture;
+//-(void)pinch:(UIPinchGestureRecognizer *)gesture;
+//-(void)handleOriginPanGesture:(UIPanGestureRecognizer *)gesture;
 @property (nonatomic, weak) IBOutlet id <graphViewDataSource> dataSource;
 @end

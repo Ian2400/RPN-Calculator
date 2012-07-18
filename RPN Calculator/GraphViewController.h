@@ -10,4 +10,5 @@
 
 @interface GraphViewController : UIViewController
 @property (nonatomic, strong) NSArray *thisProgram;
+-(void)setProgram:(NSArray *)program;
 @end
