@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SplitViewBarButtonItemPresenter.h"
 
-@interface GraphViewController : UIViewController
+@interface GraphViewController : UIViewController <SplitViewBarButtonItemPresenter>
 @property (nonatomic, strong) NSArray *thisProgram;
 @property (weak, nonatomic) IBOutlet UILabel *programDescription;
 -(void)setProgram:(NSArray *)program;

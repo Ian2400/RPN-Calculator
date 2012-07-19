@@ -16,13 +16,28 @@ UIUserInterfaceIdiomPhone)
 
 @interface GraphViewController () <graphViewDataSource>
 @property (nonatomic, weak) IBOutlet GraphView *graphView;
+@property (nonatomic, weak) IBOutlet UIToolbar *toolBar;
 @end
 
 @implementation GraphViewController
 
+@synthesize splitViewBarButtonItem = _splitViewBarButtonItem;
 @synthesize programDescription = _programDescription;
 @synthesize graphView = _graphView;
 @synthesize thisProgram = _thisProgram;
+@synthesize toolBar = _toolbar;
+
+-(void)setSplitViewBarButtonItem:(UIBarButtonItem *)splitViewBarButtonItem
+{
+    if(_splitViewBarButtonItem != splitViewBarButtonItem)
+    {
+        NSMutableArray *toolBarItems = [self.toolBar.items mutableCopy];
+        if(_splitViewBarButtonItem) [toolBarItems removeObject:_splitViewBarButtonItem];
+        if(splitViewBarButtonItem) [toolBarItems insertObject:_splitViewBarButtonItem atIndex:0];
+        self.toolBar.items = toolBarItems;
+        _splitViewBarButtonItem =  splitViewBarButtonItem;
+    }
+}
 
 -(void)setProgramDescription
 {
@@ -45,6 +60,7 @@ UIUserInterfaceIdiomPhone)
 -(void)setProgram:(NSArray *)program
 {
     _thisProgram = program;
+    [self.graphView setNeedsDisplay];
 }
 
 //set up a pinch recognizer

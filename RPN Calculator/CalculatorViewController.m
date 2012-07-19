@@ -10,6 +10,7 @@
 #import "CalculatorBrain.h"
 #import "GraphViewController.h"
 #import "math.h"	
+#import "SplitViewBarButtonItemPresenter.h"
 #define UI_USER_INTERFACE_IDIOM() \
 ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? \
 [[UIDevice currentDevice] userInterfaceIdiom] : \
@@ -42,12 +43,23 @@ UIUserInterfaceIdiomPhone)
     if(!_possibleVariableNames) _possibleVariableNames = [[NSMutableSet alloc] initWithObjects:@"x",@"y",@"a",@"b",@"pi", nil];
     return _possibleVariableNames;
 }
+- (IBAction)graphProgram {
+    if (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad)
+    {
+        [[self.splitViewController.viewControllers lastObject] setProgram:self.brain.program];
+    }
+}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if([segue.identifier isEqualToString:@"ShowGraph"])
+    if (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad)
     {
-        [segue.destinationViewController setProgram:self.brain.program];
+        //Do Nothing
+    } else {
+        if([segue.identifier isEqualToString:@"ShowGraph"])
+        {
+            [segue.destinationViewController setProgram:self.brain.program];
+        }        
     }
 }
 
@@ -193,6 +205,50 @@ UIUserInterfaceIdiomPhone)
     [super viewDidUnload];
 }
 
+//call this view controller a splitviewcontroller's delegate
+-(void) awakeFromNib
+{
+    [super awakeFromNib];
+    self.splitViewController.delegate = self;
+}
+
+-(BOOL)splitViewController:(UISplitViewController *)svc 
+  shouldHideViewController:(UIViewController *)vc 
+             inOrientation:(UIInterfaceOrientation)orientation
+{
+    //Never hide the calculator by default
+    return [self splitViewBarButtonItemPresenter] ? UIInterfaceOrientationIsPortrait(orientation) : NO;
+}
+
+-(id <SplitViewBarButtonItemPresenter>) splitViewBarButtonItemPresenter
+{
+    id detailVC = [self.splitViewController.viewControllers lastObject];
+    if([detailVC conformsToProtocol:@protocol(SplitViewBarButtonItemPresenter)])
+    {
+        detailVC = nil;
+    }
+    return detailVC;
+}
+
+-(void)splitViewController:(UISplitViewController *)svc 
+    willHideViewController:(UIViewController *)aViewController 
+         withBarButtonItem:(UIBarButtonItem *)barButtonItem 
+      forPopoverController:(UIPopoverController *)pc
+{
+    barButtonItem.title = self.title;
+    // tell the detail view to put this button up
+    [self splitViewBarButtonItemPresenter].splitViewBarButtonItem = barButtonItem;
+}
+
+-(void)splitViewController:(UISplitViewController *)svc 
+    willShowViewController:(UIViewController *)aViewController 
+    invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    //tell the detail view to take the button away
+    [self splitViewBarButtonItemPresenter].splitViewBarButtonItem = nil;
+}
+
+//Allow rotation in iPad
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     if (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad)
