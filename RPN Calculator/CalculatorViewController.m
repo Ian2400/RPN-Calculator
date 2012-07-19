@@ -150,6 +150,7 @@ UIUserInterfaceIdiomPhone)
     }
 }
 
+/**NO LONGER USED
 - (IBAction)setVarsPressed:(UIButton *)defTitle {
     //clear the dictionary and the variable set in the brain instance
     [self.currentVariableValues removeAllObjects];
@@ -191,6 +192,7 @@ UIUserInterfaceIdiomPhone)
      
      self.variableDescription.text = description;
 }
+ */
 
 - (IBAction)clearPressed
 {
@@ -255,7 +257,8 @@ UIUserInterfaceIdiomPhone)
     if (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad)
     {
         return YES;
-    }
-    return NO;
+    } else if (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown){
+        return YES;
+    } else return NO;
 }
 @end

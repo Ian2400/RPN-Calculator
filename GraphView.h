@@ -20,4 +20,5 @@
 @property (nonatomic) CGPoint axesOrigin;
 @property (nonatomic) CGPoint startingOrigin;
 @property (nonatomic, weak) IBOutlet id <graphViewDataSource> dataSource;
+@property (nonatomic) BOOL isDrawing;
 @end
