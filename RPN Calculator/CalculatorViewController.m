@@ -205,6 +205,8 @@ UIUserInterfaceIdiomPhone)
     [super viewDidUnload];
 }
 
+//BELOW IMPLEMENTS THE ROTATION AND HIDING OF THE CALCULATOR
+
 //call this view controller a splitviewcontroller's delegate
 -(void) awakeFromNib
 {
@@ -216,17 +218,16 @@ UIUserInterfaceIdiomPhone)
   shouldHideViewController:(UIViewController *)vc 
              inOrientation:(UIInterfaceOrientation)orientation
 {
-    //Never hide the calculator by default
     return [self splitViewBarButtonItemPresenter] ? UIInterfaceOrientationIsPortrait(orientation) : NO;
 }
 
 -(id <SplitViewBarButtonItemPresenter>) splitViewBarButtonItemPresenter
 {
     id detailVC = [self.splitViewController.viewControllers lastObject];
-    if([detailVC conformsToProtocol:@protocol(SplitViewBarButtonItemPresenter)])
+/*    if([detailVC conformsToProtocol:@protocol(SplitViewBarButtonItemPresenter)])
     {
         detailVC = nil;
-    }
+    }*/
     return detailVC;
 }
 

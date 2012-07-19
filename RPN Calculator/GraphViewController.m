@@ -25,7 +25,7 @@ UIUserInterfaceIdiomPhone)
 @synthesize programDescription = _programDescription;
 @synthesize graphView = _graphView;
 @synthesize thisProgram = _thisProgram;
-@synthesize toolBar = _toolbar;
+@synthesize toolBar = _toolBar;
 
 -(void)setSplitViewBarButtonItem:(UIBarButtonItem *)splitViewBarButtonItem
 {
@@ -33,7 +33,7 @@ UIUserInterfaceIdiomPhone)
     {
         NSMutableArray *toolBarItems = [self.toolBar.items mutableCopy];
         if(_splitViewBarButtonItem) [toolBarItems removeObject:_splitViewBarButtonItem];
-        if(splitViewBarButtonItem) [toolBarItems insertObject:_splitViewBarButtonItem atIndex:0];
+        if(splitViewBarButtonItem) [toolBarItems insertObject:splitViewBarButtonItem atIndex:0];
         self.toolBar.items = toolBarItems;
         _splitViewBarButtonItem =  splitViewBarButtonItem;
     }
