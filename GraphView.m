@@ -69,10 +69,10 @@
 -(void)setScale:(CGFloat)scale
 {  
     if(scale !=_scale) {
-        if(scale >= 100) {
+        if(scale > 100) {
         scale = 100;
-        } else if(_scale <=-100) {
-            scale = -100;
+        } else if(_scale < .1) {
+            scale = .1;
         }
         _scale = scale; 
         [self setNeedsDisplay];
@@ -94,12 +94,13 @@
     self.isDrawing = YES;
     if(gesture.state == UIGestureRecognizerStateChanged || gesture.state == UIGestureRecognizerStateEnded)
     { 
-        [self setScale:(self.scale + gesture.velocity)];
+        [self setScale:(self.scale + ((gesture.scale - 1) * 3))];
     }
     if(gesture.state == UIGestureRecognizerStateEnded) {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setFloat:self.scale forKey:@"scale"];   
         self.isDrawing = NO;
+        gesture.scale = 1;
         [self setNeedsDisplay];
     }
 }
@@ -139,6 +140,7 @@
     [prefs setFloat:self.startingOrigin.x forKey:@"startingOriginX"];
     [prefs setFloat:self.startingOrigin.y forKey:@"startingOriginY"];
     self.isDrawing = NO;
+    [self setNeedsDisplay];
 }
 
 -(void) setup
@@ -175,6 +177,8 @@
         thisScale = [prefs floatForKey:@"scale"];
         thisOrigin.x = [prefs floatForKey:@"axesOriginX"];
         thisOrigin.y = [prefs floatForKey:@"axesOriginY"];
+        self.scale = thisScale;
+        self.axesOrigin = thisOrigin;
         self.startingOrigin = thisOrigin;
     }
     
